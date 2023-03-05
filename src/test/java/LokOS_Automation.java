@@ -17,11 +17,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class LokOS_Automation {
     static AndroidDriver<MobileElement> driver;
     static WebDriverWait wait;
+
     public static void main(String[] args) throws InterruptedException, IOException {
         openLokOS();
         navigateSHG();
         fillInfo();
     }
+
     public static MobileElement scrollToText(AndroidDriver<MobileElement> driver, String text) {
         return (MobileElement) driver.findElementByAndroidUIAutomator("new UiScrollable("
                 + "new UiSelector().scrollable(true)).scrollIntoView(" + "new UiSelector().text(\"" + text + "\"));");
@@ -34,19 +36,31 @@ public class LokOS_Automation {
                         + "new UiSelector().resourceIdMatches(\"" + id + "\"));");
     }
 
-    public static MobileElement selectDropdownText(String text){
-        WebElement dropdown = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@text='"+text+"']")));
+    public static MobileElement selectDropdownText(String text) {
+        WebElement dropdown = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@text='" + text + "']")));
         return (MobileElement) dropdown;
     }
 
-    public static void fillInfo() throws IOException {
+    public static MobileElement selectElement(String id) {
+        WebElement chosenElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
+        return (MobileElement) chosenElement;
+    }
+
+    public static MobileElement selectElementXPath(String myText) {
+        WebElement chosenElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text,'" + myText + "')]")));
+        return (MobileElement) chosenElement;
+    }
+
+
+    public static void fillInfo() throws IOException, InterruptedException {
+        System.out.println("Filling Info");
         // SHG Name
         MobileElement SHGName = scrollToId("com.microware.cdfi.training:id/et_groupname");
         SHGName.sendKeys("Test SHG");
 
         // SHG Date
         scrollToId("com.microware.cdfi.training:id/et_formationDate").click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("android:id/button1"))).click();
+        selectElement("android:id/button1").click();
 
         // Promoted By
         scrollToId("com.microware.cdfi.training:id/spin_promotedby").click();
@@ -84,22 +98,67 @@ public class LokOS_Automation {
 
         // Resolution File
         scrollToId("com.microware.cdfi.training:id/Imgmember").click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.microware.cdfi.training:id/tvUploadData"))).click();
+        selectElement("com.microware.cdfi.training:id/tvUploadData").click();
 
         // push a file to the device using appium
         String filePath = "src/test/java/SHGCopy.pdf";
         driver.pushFile("/storage/emulated/0/Download/SHGCopy.pdf", new File(filePath));
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text,'SHGCopy')]"))).click();
+
+        selectElementXPath("SHGCopy").click();
+
+        // click on submit
+        scrollToId("com.microware.cdfi.training:id/btn_save").click();
+        selectElement("com.microware.cdfi.training:id/btn_ok").click();
 
 
+        System.out.println("Switching to Location Page");
+        // switch to page 3
+        selectElement("com.microware.cdfi.training:id/Ivloc").click();
+        selectElement("com.microware.cdfi.training:id/addAddress").click();
+        selectElement("com.microware.cdfi.training:id/et_address1").sendKeys("Test Address");
+        selectElement("com.microware.cdfi.training:id/et_pincode").sendKeys("222129");
+        selectElement("com.microware.cdfi.training:id/btn_add").click();
 
+        // clicking ok after submit
+        selectElement("com.microware.cdfi.training:id/btn_ok").click();
 
+        System.out.println("Switching to Bank Page");
+        // switch to page 4
+        selectElement("com.microware.cdfi.training:id/IvBank").click();
+        selectElement("com.microware.cdfi.training:id/addBank").click();
 
+        // bank name
+        selectElement("com.microware.cdfi.training:id/et_nameinbankpassbook").sendKeys("Test Bank");
+        selectElement("com.microware.cdfi.training:id/et_ifsc").sendKeys("SBIN0013266");
+        selectElementXPath("Please Select Bank").click();
+
+        //selecting the first bank
+        selectDropdownText("AXIS BANK").click();
+
+        // there is a branch BIJNOR in the list selected from above
+        selectElementXPath("Select Branch Name").click();
+        selectElementXPath("BIJNOR").click();
+
+        scrollToId("com.microware.cdfi.training:id/et_Accountno").sendKeys("22345678901");
+        scrollToId("com.microware.cdfi.training:id/et_retype_Accountno").sendKeys("22345678901");
+
+        // account opening date
+        scrollToId("com.microware.cdfi.training:id/et_opdate").click();
+        selectElement("android:id/button1").click();
+
+        //TODO passbook page camera selection logic not working
+        scrollToId("com.microware.cdfi.training:id/ImgFrntpage").click();
+        selectElement("com.microware.cdfi.training:id/btn_add").click();
+
+        selectElement("com.microware.cdfi.training:id/btn_ok").click();
+
+        // switch to page 5
+        selectElement("com.microware.cdfi.training:id/IvKyc").click();
 
 
     }
 
-    public static void navigateSHG(){
+    public static void navigateSHG() {
         WebElement choose = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.microware.cdfi.training:id/tbl_shg")));
         choose.click();
         System.out.println("SHG selected");
@@ -107,7 +166,8 @@ public class LokOS_Automation {
         WebElement create = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.microware.cdfi.training:id/IvAdd")));
         create.click();
     }
-    public static void openLokOS(){
+
+    public static void openLokOS() {
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("deviceName", "Note 10 Pro");
@@ -117,19 +177,18 @@ public class LokOS_Automation {
         capabilities.setCapability("appPackage", "com.microware.cdfi.training");
         capabilities.setCapability("appActivity", "com.microware.cdfi.activity.SplashScreenActivity");
         capabilities.setCapability("noReset", "true");
-        capabilities.setCapability("newCommandTimeout", 200);
+        capabilities.setCapability("newCommandTimeout", 10000);
 
 
         URL url;
         try {
             url = new URL("http://127.0.0.1:4723/wd/hub");
-            driver=new AndroidDriver<MobileElement>(url,capabilities);
+            driver = new AndroidDriver<MobileElement>(url, capabilities);
         } catch (MalformedURLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             System.out.println("Error in URL");
         }
-
 
 
         System.out.println("App Opened");
