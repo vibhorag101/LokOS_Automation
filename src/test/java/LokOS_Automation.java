@@ -2,6 +2,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -19,13 +20,58 @@ public class LokOS_Automation {
         navigateSHG();
         fillInfo();
     }
+    public static MobileElement scrollToText(AndroidDriver<MobileElement> driver, String text) {
+        return (MobileElement) driver.findElementByAndroidUIAutomator("new UiScrollable("
+                + "new UiSelector().scrollable(true)).scrollIntoView(" + "new UiSelector().text(\"" + text + "\"));");
+    }
+
+    public static MobileElement scrollToId(AndroidDriver<MobileElement> driver, String id) {
+
+        return (MobileElement) driver.findElementByAndroidUIAutomator(
+                "new UiScrollable(" + "new UiSelector().scrollable(true)).scrollIntoView("
+                        + "new UiSelector().resourceIdMatches(\"" + id + "\"));");
+    }
 
     public static void fillInfo(){
         WebElement SHGName = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.microware.cdfi.training:id/et_groupname")));
         SHGName.sendKeys("Test SHG");
         WebElement date = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.microware.cdfi.training:id/et_formationDate")));
         date.click();
-        System.out.println("Date clicked");
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("android:id/button1"))).click();
+        System.out.println("Date Selected");
+
+        WebElement promotedBy = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.microware.cdfi.training:id/spin_promotedby")));
+        promotedBy.click();
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@text='NRLM']"))).click();
+        // Meeting Frequency
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.microware.cdfi.training:id/spin_frequency"))).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@text='Weekly']"))).click();
+
+        // saving frequency
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.microware.cdfi.training:id/spin_savingfrequency"))).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@text='Weekly']"))).click();
+
+        // saving value
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.microware.cdfi.training:id/et_saving"))).sendKeys("10");
+
+        // primary activity
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.microware.cdfi.training:id/spin_primaryActivity"))).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@text='Agriculture Activities']"))).click();
+
+        // primary activity
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.microware.cdfi.training:id/spin_secondaryActivity"))).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@text='Fishery Activities']"))).click();
+
+        // tertiary activity
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.microware.cdfi.training:id/spin_tertiaryActivity"))).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@text='Horticulture Activities']"))).click();
+
+        // tenure of office bearers
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.microware.cdfi.training:id/et_electiontenure"))).sendKeys("12");
+
+
 
     }
 
@@ -67,6 +113,8 @@ public class LokOS_Automation {
         // enter password on login screen
         WebElement enterPassword = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.microware.cdfi.training:id/otp_view")));
         enterPassword.sendKeys("1234");
+
+
         // wait for some time
 
         System.out.println("Password entered");
