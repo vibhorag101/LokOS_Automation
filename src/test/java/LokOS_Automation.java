@@ -2,7 +2,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -103,11 +106,11 @@ public class LokOS_Automation {
         // push a file to the device using appium
         String filePath = "src/test/java/SHGCopy.pdf";
         driver.pushFile("/storage/emulated/0/Download/SHGCopy.pdf", new File(filePath));
-
+        driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
         selectElementXPath("SHGCopy").click();
 
         // click on submit
-        scrollToId("com.microware.cdfi.training:id/btn_save").click();
+        selectElement("com.microware.cdfi.training:id/btn_save").click();
         selectElement("com.microware.cdfi.training:id/btn_ok").click();
 
 
@@ -128,8 +131,6 @@ public class LokOS_Automation {
         selectElement("com.microware.cdfi.training:id/addBank").click();
 
         // bank name
-        selectElement("com.microware.cdfi.training:id/et_nameinbankpassbook").sendKeys("Test Bank");
-        selectElement("com.microware.cdfi.training:id/et_ifsc").sendKeys("SBIN0013266");
         selectElementXPath("Please Select Bank").click();
 
         //selecting the first bank
@@ -146,15 +147,29 @@ public class LokOS_Automation {
         scrollToId("com.microware.cdfi.training:id/et_opdate").click();
         selectElement("android:id/button1").click();
 
-        //TODO passbook page camera selection logic not working
-        scrollToId("com.microware.cdfi.training:id/ImgFrntpage").click();
-        selectElement("com.microware.cdfi.training:id/btn_add").click();
+        //Camera Image Capture Working
+        scrollToId("com.microware.cdfi.training:id/ImgFrntpage");
+        selectElement("com.microware.cdfi.training:id/ImgFrntpage").click();
 
+        // wait for camera to load
+        selectElement("com.android.camera:id/top_tip_layout");
+
+        // press camera button
+        driver.pressKey(new KeyEvent().withKey(AndroidKey.CAMERA));
+        selectElement("com.android.camera:id/done_button").click();
+        selectElement("com.microware.cdfi.training:id/crop_image_menu_crop").click();
+
+        // submit bank details
+        selectElement("com.microware.cdfi.training:id/btn_add").click();
         selectElement("com.microware.cdfi.training:id/btn_ok").click();
 
-        // switch to page 5
-        selectElement("com.microware.cdfi.training:id/IvKyc").click();
+//        // switch to page 5
+//        selectElement("com.microware.cdfi.training:id/IvKyc").click();
 
+
+        // go to main page
+        driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+        selectElement("com.microware.cdfi.training:id/ivBack").click();
 
     }
 
