@@ -66,7 +66,7 @@ public class LokOS_Automation {
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("deviceName", "Note 10 Pro");
-        capabilities.setCapability("189557ef", "RZ8M31X1Z9C");
+        capabilities.setCapability("udid", "189557ef");
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("platformVersion", "12");
         capabilities.setCapability("appPackage", "com.microware.cdfi.training");
@@ -304,8 +304,87 @@ public class LokOS_Automation {
 
 
         // Add Phone Number Page
-        selectElement("com.microware.cdfi.training:id/addphone");
-        
+        selectElement("com.microware.cdfi.training:id/addphone").click();
+        selectElement("com.microware.cdfi.training:id/et_phoneno").sendKeys("9999999999");
+        selectElement("com.microware.cdfi.training:id/spin_ownership").click();
+        selectDropdownText("Self").click();
+        selectElement("com.microware.cdfi.training:id/btn_save").click();
+        selectElement("com.microware.cdfi.training:id/btn_ok").click();
+
+        // Add Address Page
+        selectElement("com.microware.cdfi.training:id/Ivloc").click();
+        selectElement("com.microware.cdfi.training:id/addAddress").click();
+
+        selectElement("com.microware.cdfi.training:id/spin_addresstype").click();
+        selectDropdownText("Primary").click();
+
+        scrollToId("com.microware.cdfi.training:id/et_address1").sendKeys("Test Address 1");
+        scrollToId("com.microware.cdfi.training:id/et_pincode").sendKeys("222129");
+
+        scrollToId("com.microware.cdfi.training:id/btn_add").click();
+        selectElement("com.microware.cdfi.training:id/btn_ok").click();
+
+        // Add Bank Details
+        scrollToId("com.microware.cdfi.training:id/IvBank").click();
+        selectElement("com.microware.cdfi.training:id/addBank").click();
+
+        // Bank Name
+        selectElementXPath("Please Select Bank").click();
+
+        //selecting the first bank
+        selectDropdownText("AXIS BANK").click();
+
+        // there is a branch BIJNOR in the list selected from above
+        selectElementXPath("Select Branch Name").click();
+        selectElementXPath("BIJNOR").click();
+
+        scrollToId("com.microware.cdfi.training:id/et_Accountno").sendKeys("22345604901");
+        scrollToId("com.microware.cdfi.training:id/et_retype_Accountno").sendKeys("22345604901");
+
+        // account opening date
+        scrollToId("com.microware.cdfi.training:id/et_opdate").click();
+        selectElement("android:id/button1").click();
+
+        //Camera Image Capture Working
+        scrollToId("com.microware.cdfi.training:id/ImgFrntpage");
+        selectElement("com.microware.cdfi.training:id/ImgFrntpage").click();
+
+        // wait for camera to load
+        selectElement("com.android.camera:id/top_tip_layout");
+        clickImage();
+
+        scrollToId("com.microware.cdfi.training:id/btn_add").click();
+        selectElement("com.microware.cdfi.training:id/btn_ok").click();
+
+        // Do KYC Page
+        selectElement("com.microware.cdfi.training:id/IvKyc").click();
+        selectElement("com.microware.cdfi.training:id/addKyc").click();
+
+        selectElement("com.microware.cdfi.training:id/spin_kyctype").click();
+        selectDropdownText("Voter ID").click();
+
+        selectElement("com.microware.cdfi.training:id/et_kycno").sendKeys("WHY1234567");
+
+        scrollToId("com.microware.cdfi.training:id/IvFrntUpload").click();
+        clickImage();
+
+        selectElement("com.microware.cdfi.training:id/IvrearUpload").click();
+        clickImage();
+
+        selectElement("com.microware.cdfi.training:id/btn_kyc").click();
+        selectElement("com.microware.cdfi.training:id/btn_ok").click();
+
+        driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+        selectElement("com.microware.cdfi.training:id/ivBack").click();
+
+
+
+
+
+
+
+
+
 
 
 
