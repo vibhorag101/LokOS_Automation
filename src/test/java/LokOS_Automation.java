@@ -220,14 +220,7 @@ public class LokOS_Automation {
         //Camera Image Capture Working
         scrollToId("com.microware.cdfi.training:id/ImgFrntpage");
         selectElement("com.microware.cdfi.training:id/ImgFrntpage").click();
-
-        // wait for camera to load
-        selectElement("com.android.camera:id/top_tip_layout");
-
-        // press camera button
-        driver.pressKey(new KeyEvent().withKey(AndroidKey.CAMERA));
-        selectElement("com.android.camera:id/done_button").click();
-        selectElement("com.microware.cdfi.training:id/crop_image_menu_crop").click();
+        clickImage();
 
         // submit bank details
         selectElement("com.microware.cdfi.training:id/btn_add").click();
