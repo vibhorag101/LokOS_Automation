@@ -7,8 +7,6 @@ import java.util.concurrent.TimeUnit;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -20,6 +18,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class LokOS_Automation {
     static AndroidDriver<MobileElement> driver;
     static WebDriverWait wait;
+    static Aadhaar aadhaar;
 
     public static MobileElement scrollToText(AndroidDriver<MobileElement> driver, String text) {
         return (MobileElement) driver.findElementByAndroidUIAutomator("new UiScrollable("
@@ -57,9 +56,21 @@ public class LokOS_Automation {
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        openLokOS();
-        navigateToSHG();
-        createSHG();
+        System.out.println(AadhaarGenerator());
+//        openLokOS();
+//        navigateToSHG();
+//        createSHG();
+    }
+    public static int randomNumber(int lowerBound, int upperBound){
+        return(lowerBound + (int)(Math.random() * ((upperBound - lowerBound) + 1)));
+    }
+    public static String AadhaarGenerator(){
+        String digit1 = "2";
+        String digit2_6 = String.valueOf(randomNumber(10000,99999));
+        String digit7_8 = "23";
+        String digit9_11 = String.valueOf(randomNumber(100,999));
+        String num = digit1 + digit2_6 + digit7_8 + digit9_11;
+        return(num + Aadhaar.generateVerhoeff(num));
     }
 
     public static void openLokOS() {
@@ -106,7 +117,7 @@ public class LokOS_Automation {
         System.out.println("SHG selected");
     }
     public static void createSHG() throws IOException, InterruptedException{
-//        fillInfo();
+        fillInfo();
         createMembers();
     }
     public static void clickImage(){
