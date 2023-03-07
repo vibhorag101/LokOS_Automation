@@ -56,10 +56,9 @@ public class LokOS_Automation {
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        System.out.println(AadhaarGenerator());
-//        openLokOS();
-//        navigateToSHG();
-//        createSHG();
+        openLokOS();
+        navigateToSHG();
+        createSHG();
     }
     public static int randomNumber(int lowerBound, int upperBound){
         return(lowerBound + (int)(Math.random() * ((upperBound - lowerBound) + 1)));
