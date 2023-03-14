@@ -1,5 +1,6 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
 public class DataGenerator {
@@ -11,7 +12,8 @@ public class DataGenerator {
     static long mobileNumber = 9999900000L;
     static String address = "address";
     static long accountNumber = 10000000000L;
-    static int voterIDSuffix = 1000000;
+//    static int voterIDSuffix = 1000000;
+    static HashSet<String> aadhaarSet = new HashSet<String>();
 
     private static Scanner scan = new Scanner(System.in);
     public static void main(String[] args) {
@@ -27,7 +29,33 @@ public class DataGenerator {
         System.out.print("\nNo. Of. Members in Each SHG: ");
         int num_member = scan.nextInt();
 
+//        while(true){
+//            for(int i = 0; i < 625; i++){
+//                String number = AadhaarGenerator();
+//                aadhaarSet.add(number);
+//            }
+//            System.out.println(aadhaarSet.size());
+//            if(aadhaarSet.size() != 625) break;
+//            aadhaarSet.clear();
+//        }
+//        System.out.println("Duplication Detected");
+
         generateSHGData(num_shg, num_member);
+    }
+
+    public static int randomNumber(int lowerBound, int upperBound){
+        return(lowerBound + (int)(Math.random() * ((upperBound - lowerBound) + 1)));
+    }
+
+    public static String AadhaarGenerator(){
+        String digit1 = "2";
+        String digit2_6 = String.valueOf(randomNumber(10000,99999));
+        String digit7_8 = "23";
+        String digit9_11 = String.valueOf(randomNumber(100,999));
+        String num = digit1 + digit2_6 + digit7_8 + digit9_11;
+        String aadhaarNumber = num + Aadhaar.generateVerhoeff(num);
+        if(aadhaarSet.contains(aadhaarNumber)) return AadhaarGenerator();
+        return aadhaarNumber;
     }
 
     private static void generateSHGData(int num_shg, int num_member){
@@ -68,19 +96,19 @@ public class DataGenerator {
             writer.append("mobileNumber,");
             writer.append("address,");
             writer.append("accountNumber,");
-            writer.append("voterID\n");
+            writer.append("aadhaarNumber\n");
 
             for(int i = 1; i <= num_member; i++){
                 /* To generate Random Name */
                 String name = generateRandomName(random, 5);
-                voterIDSuffix++;
+//                voterIDSuffix++;
                 accountNumber++;
                 mobileNumber++;
                 writer.append(name + ",");
                 writer.append(mobileNumber + ",");
                 writer.append(address + i + ",");
                 writer.append(accountNumber + ",");
-                writer.append("WHY" + (voterIDSuffix) + "\n");
+//                writer.append("WHY" + (voterIDSuffix) + "\n");
             }
 
             writer.flush();

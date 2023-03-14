@@ -1,59 +1,45 @@
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.nativekey.AndroidKey;
-import io.appium.java_client.android.nativekey.KeyEvent;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.android.nativekey.KeyEvent;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 public class LokOS_Automation {
     static AndroidDriver<MobileElement> driver;
     static WebDriverWait wait;
     static Aadhaar aadhaar;
 
-    public static MobileElement scrollToText(String text) {
-        return driver.findElementByAndroidUIAutomator("new UiScrollable("
+    public static MobileElement scrollToText(AndroidDriver<MobileElement> driver, String text) {
+        return (MobileElement) driver.findElementByAndroidUIAutomator("new UiScrollable("
                 + "new UiSelector().scrollable(true)).scrollIntoView(" + "new UiSelector().text(\"" + text + "\"));");
     }
 
     public static MobileElement scrollToId(String id) {
 
-        return driver.findElementByAndroidUIAutomator(
+        return (MobileElement) driver.findElementByAndroidUIAutomator(
                 "new UiScrollable(" + "new UiSelector().scrollable(true)).scrollIntoView("
                         + "new UiSelector().resourceIdMatches(\"" + id + "\"));");
-    }
-
-    public static MobileElement selectSHG(String SHGName) {
-        String s = "new UiSelector().className(\"android.widget.LinearLayout\").childSelector("
-                + "new UiSelector().className(\"android.widget.TextView\").text(\"" + SHGName + "\"))";
-        // scroll the container with the shg elements
-        driver.findElementByAndroidUIAutomator(
-                "new UiScrollable(" + "new UiSelector().resourceIdMatches(\"com.microware.cdfi.training:id/rvShgList\")).scrollIntoView("
-                        + "new UiSelector().text(\"" + SHGName + "\"));");
-
-        // once the required element in view select all the linearlayout and check if it contains the SHGName
-        // if it does return the tv_count from that element
-        for (MobileElement m : driver.findElementsByClassName("android.widget.LinearLayout")) {
-            if (m.findElementsByXPath("//android.widget.TextView[contains(@text,'" + SHGName + "')]").size() != 0) {
-                return (m.findElementById("com.microware.cdfi.training:id/tv_count"));
-            }
-
-        }
-        return null;
-
     }
 
     public static MobileElement selectDropdownText(String text) {
         WebElement dropdown = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@text='" + text + "']")));
         return (MobileElement) dropdown;
     }
+//    public static MobileElement selectDropdownTextAbsolute(String text){
+//        WebElement dropdown = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(text)));
+//        return (MobileElement) dropdown;
+//    }
 
     public static MobileElement selectElement(String id) {
         WebElement chosenElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
@@ -64,8 +50,7 @@ public class LokOS_Automation {
         WebElement chosenElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text,'" + myText + "')]")));
         return (MobileElement) chosenElement;
     }
-
-    public static MobileElement selectRadio(String myText) {
+    public static  MobileElement selectRadio(String myText){
         WebElement chosenElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.RadioButton[contains(@text,'" + myText + "')]")));
         return (MobileElement) chosenElement;
     }
@@ -75,19 +60,17 @@ public class LokOS_Automation {
         navigateToSHG();
         createSHG();
     }
-
-    public static int randomNumber(int lowerBound, int upperBound) {
-        return (lowerBound + (int) (Math.random() * ((upperBound - lowerBound) + 1)));
-    }
-
-    public static String AadhaarGenerator() {
-        String digit1 = "2";
-        String digit2_6 = String.valueOf(randomNumber(10000, 99999));
-        String digit7_8 = "23";
-        String digit9_11 = String.valueOf(randomNumber(100, 999));
-        String num = digit1 + digit2_6 + digit7_8 + digit9_11;
-        return (num + Aadhaar.generateVerhoeff(num));
-    }
+//    public static int randomNumber(int lowerBound, int upperBound){
+//        return(lowerBound + (int)(Math.random() * ((upperBound - lowerBound) + 1)));
+//    }
+//    public static String AadhaarGenerator(){
+//        String digit1 = "2";
+//        String digit2_6 = String.valueOf(randomNumber(10000,99999));
+//        String digit7_8 = "23";
+//        String digit9_11 = String.valueOf(randomNumber(100,999));
+//        String num = digit1 + digit2_6 + digit7_8 + digit9_11;
+//        return(num + Aadhaar.generateVerhoeff(num));
+//    }
 
     public static void openLokOS() {
 
@@ -132,13 +115,11 @@ public class LokOS_Automation {
         choose.click();
         System.out.println("SHG selected");
     }
-
-    public static void createSHG() throws IOException, InterruptedException {
+    public static void createSHG() throws IOException, InterruptedException{
         fillInfo();
         createMembers();
     }
-
-    public static void clickImage() {
+    public static void clickImage(){
         //Camera Image Capture Working
         // wait for camera to load
         selectElement("com.android.camera:id/top_tip_layout");
@@ -158,7 +139,7 @@ public class LokOS_Automation {
         System.out.println("Filling Info");
         // SHG Name
         MobileElement SHGName = scrollToId("com.microware.cdfi.training:id/et_groupname");
-        SHGName.sendKeys("our scroll SHG");
+        SHGName.sendKeys("Test SHG");
 
         // SHG Date
         scrollToId("com.microware.cdfi.training:id/et_formationDate").click();
@@ -264,15 +245,8 @@ public class LokOS_Automation {
 
     }
 
-
-    public static void createMembers() {
-        MobileElement buttonSelected = selectSHG("VIBHOR SHG");
-        if (buttonSelected == null) {
-            System.out.println("SHG Not exist");
-            return;
-        }
-        buttonSelected.click();
-
+    public static void createMembers(){
+        selectElement("com.microware.cdfi.training:id/tv_count").click();
         selectElement("com.microware.cdfi.training:id/tbl_add").click();
 
         // fill member details
@@ -405,9 +379,5 @@ public class LokOS_Automation {
 
         driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
         selectElement("com.microware.cdfi.training:id/ivBack").click();
-
-
     }
-
-
 }
