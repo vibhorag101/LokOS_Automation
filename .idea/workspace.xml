@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f47b02c-b033-42a4-962f-141d8bf3d4fc" name="Changes" comment="Data Geenration Sorted.">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="1f47b02c-b033-42a4-962f-141d8bf3d4fc" name="Changes" comment="Aadhaar Duplication Resolved.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DataGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/DataGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/LokOS_Automation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/LokOS_Automation.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +82,14 @@
       <option name="presentableId" value="Default" />
       <updated>1678113941944</updated>
     </task>
+    <task id="LOCAL-00001" summary="Aadhaar Duplication Resolved.">
+      <created>1678772672234</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1678772672234</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -98,7 +103,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/vibhor" />
+                        <option value="origin/main" />
                       </list>
                     </value>
                   </entry>
@@ -109,9 +114,25 @@
         </entry>
       </map>
     </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/vibhor" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Data Geenration Sorted." />
-    <option name="LAST_COMMIT_MESSAGE" value="Data Geenration Sorted." />
+    <MESSAGE value="Aadhaar Duplication Resolved." />
+    <option name="LAST_COMMIT_MESSAGE" value="Aadhaar Duplication Resolved." />
   </component>
 </project>
