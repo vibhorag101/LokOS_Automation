@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class LokOS_Automation {
     static AndroidDriver<MobileElement> driver;
     static WebDriverWait wait;
-    static Aadhaar aadhaar;
+//    static Aadhaar aadhaar;
 
     public static MobileElement scrollToText(String text) {
         return driver.findElementByAndroidUIAutomator("new UiScrollable("
@@ -76,18 +76,18 @@ public class LokOS_Automation {
         createSHG();
     }
 
-    public static int randomNumber(int lowerBound, int upperBound) {
-        return (lowerBound + (int) (Math.random() * ((upperBound - lowerBound) + 1)));
-    }
-
-    public static String AadhaarGenerator() {
-        String digit1 = "2";
-        String digit2_6 = String.valueOf(randomNumber(10000, 99999));
-        String digit7_8 = "23";
-        String digit9_11 = String.valueOf(randomNumber(100, 999));
-        String num = digit1 + digit2_6 + digit7_8 + digit9_11;
-        return (num + Aadhaar.generateVerhoeff(num));
-    }
+//    public static int randomNumber(int lowerBound, int upperBound) {
+//        return (lowerBound + (int) (Math.random() * ((upperBound - lowerBound) + 1)));
+//    }
+//
+//    public static String AadhaarGenerator() {
+//        String digit1 = "2";
+//        String digit2_6 = String.valueOf(randomNumber(10000, 99999));
+//        String digit7_8 = "23";
+//        String digit9_11 = String.valueOf(randomNumber(100, 999));
+//        String num = digit1 + digit2_6 + digit7_8 + digit9_11;
+//        return (num + Aadhaar.generateVerhoeff(num));
+//    }
 
     public static void openLokOS() {
 
@@ -121,7 +121,6 @@ public class LokOS_Automation {
 
 
         // wait for some time
-
         System.out.println("Password entered");
 
 
