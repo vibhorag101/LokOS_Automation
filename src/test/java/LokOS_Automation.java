@@ -1,45 +1,62 @@
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
-
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
-
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.TimeUnit;
+import java.io.*;
+import java.util.*;
 
 public class LokOS_Automation {
     static AndroidDriver<MobileElement> driver;
     static WebDriverWait wait;
-    static Aadhaar aadhaar;
+//    static Aadhaar aadhaar;
 
-    public static MobileElement scrollToText(AndroidDriver<MobileElement> driver, String text) {
-        return (MobileElement) driver.findElementByAndroidUIAutomator("new UiScrollable("
+    public static MobileElement scrollToText(String text) {
+        return driver.findElementByAndroidUIAutomator("new UiScrollable("
                 + "new UiSelector().scrollable(true)).scrollIntoView(" + "new UiSelector().text(\"" + text + "\"));");
     }
 
     public static MobileElement scrollToId(String id) {
 
-        return (MobileElement) driver.findElementByAndroidUIAutomator(
+        return driver.findElementByAndroidUIAutomator(
                 "new UiScrollable(" + "new UiSelector().scrollable(true)).scrollIntoView("
                         + "new UiSelector().resourceIdMatches(\"" + id + "\"));");
+    }
+
+    public static MobileElement selectSHG(String SHGName) {
+//        System.out.println("selectSHG: " + SHGName);
+        String s = "new UiSelector().className(\"android.widget.LinearLayout\").childSelector("
+                + "new UiSelector().className(\"android.widget.TextView\").text(\"" + SHGName + "\"))";
+        // scroll the container with the shg elements
+        driver.findElementByAndroidUIAutomator(
+                "new UiScrollable(" + "new UiSelector().resourceIdMatches(\"com.microware.cdfi.training:id/rvShgList\")).scrollIntoView("
+                        + "new UiSelector().text(\"" + SHGName + "\"));");
+
+        // once the required element in view select all the linearlayout and check if it contains the SHGName
+        // if it does return the tv_count from that element
+        for (MobileElement m : driver.findElementsByClassName("android.widget.LinearLayout")) {
+            if (m.findElementsByXPath("//android.widget.TextView[contains(@text,'" + SHGName + "')]").size() != 0) {
+                return (m.findElementById("com.microware.cdfi.training:id/tv_count"));
+            }
+
+        }
+        return null;
+
     }
 
     public static MobileElement selectDropdownText(String text) {
         WebElement dropdown = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@text='" + text + "']")));
         return (MobileElement) dropdown;
     }
-//    public static MobileElement selectDropdownTextAbsolute(String text){
-//        WebElement dropdown = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(text)));
-//        return (MobileElement) dropdown;
-//    }
 
     public static MobileElement selectElement(String id) {
         WebElement chosenElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
@@ -50,33 +67,43 @@ public class LokOS_Automation {
         WebElement chosenElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text,'" + myText + "')]")));
         return (MobileElement) chosenElement;
     }
-    public static  MobileElement selectRadio(String myText){
+
+    public static MobileElement selectRadio(String myText) {
         WebElement chosenElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.RadioButton[contains(@text,'" + myText + "')]")));
         return (MobileElement) chosenElement;
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
+        DataGenerator.main(new String[] {"Tho Chaliye Shuru Karte Hain!"});
         openLokOS();
         navigateToSHG();
-        createSHG();
-    }
-    public static int randomNumber(int lowerBound, int upperBound){
-        return(lowerBound + (int)(Math.random() * ((upperBound - lowerBound) + 1)));
-    }
-    public static String AadhaarGenerator(){
-        String digit1 = "2";
-        String digit2_6 = String.valueOf(randomNumber(10000,99999));
-        String digit7_8 = "23";
-        String digit9_11 = String.valueOf(randomNumber(100,999));
-        String num = digit1 + digit2_6 + digit7_8 + digit9_11;
-        return(num + Aadhaar.generateVerhoeff(num));
+        File file = new File("SHG_Data.csv");
+        try {
+            FileReader reader = new FileReader(file);
+            Scanner scanner = new Scanner(reader);
+
+            if (scanner.hasNextLine())scanner.nextLine();
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] fields = line.split(",");
+                createSHG(fields[0], fields[1], fields[2]);
+            }
+            scanner.close();
+            reader.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error in reading the CSV File!");
+        }
+//        createSHG();
     }
 
     public static void openLokOS() {
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("deviceName", "Note 10 Pro");
-        capabilities.setCapability("udid", "189557ef");
+//        capabilities.setCapability("deviceName", "Redmi Note 10 Pro");
+//        capabilities.setCapability("udid", "189557ef");
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("platformVersion", "12");
         capabilities.setCapability("appPackage", "com.microware.cdfi.training");
@@ -104,7 +131,6 @@ public class LokOS_Automation {
 
 
         // wait for some time
-
         System.out.println("Password entered");
 
 
@@ -113,13 +139,43 @@ public class LokOS_Automation {
     public static void navigateToSHG() {
         WebElement choose = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.microware.cdfi.training:id/tbl_shg")));
         choose.click();
-        System.out.println("SHG selected");
+//        System.out.println("SHG selected");
     }
-    public static void createSHG() throws IOException, InterruptedException{
-        fillInfo();
-        createMembers();
+
+    public static void createSHG(String name, String address, String accountNumber) throws IOException, InterruptedException {
+        fillInfo(name, address, accountNumber);
+        String member_FileNumber = name.split(" ")[1];
+        File file = new File("SHG_MemberData-" + member_FileNumber + ".csv");
+        MobileElement buttonSelected = selectSHG(name);
+        if (buttonSelected == null) {
+            System.out.println("SHG Not exist");
+            return;
+        }
+        buttonSelected.click();
+        try {
+            FileReader reader = new FileReader(file);
+            Scanner scanner = new Scanner(reader);
+
+            if (scanner.hasNextLine())scanner.nextLine();
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] fields = line.split(",");
+                createMembers(name, fields[0], fields[1], fields[2], fields[3], fields[4]);
+            }
+            scanner.close();
+            reader.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error in reading the CSV File!");
+        }
+        driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+        selectElement("com.microware.cdfi.training:id/icBack").click();
+
     }
-    public static void clickImage(){
+
+    public static void clickImage() {
         //Camera Image Capture Working
         // wait for camera to load
         selectElement("com.android.camera:id/top_tip_layout");
@@ -131,15 +187,15 @@ public class LokOS_Automation {
     }
 
 
-    public static void fillInfo() throws IOException, InterruptedException {
+    public static void fillInfo(String name, String address, String accountNumber) throws IOException, InterruptedException {
         // press the create SHG Button
         WebElement create = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.microware.cdfi.training:id/IvAdd")));
         create.click();
 
-        System.out.println("Filling Info");
+//        System.out.println("Filling Info");
         // SHG Name
         MobileElement SHGName = scrollToId("com.microware.cdfi.training:id/et_groupname");
-        SHGName.sendKeys("Test SHG");
+        SHGName.sendKeys(name);
 
         // SHG Date
         scrollToId("com.microware.cdfi.training:id/et_formationDate").click();
@@ -194,18 +250,18 @@ public class LokOS_Automation {
         selectElement("com.microware.cdfi.training:id/btn_ok").click();
 
 
-        System.out.println("Switching to Location Page");
+//        System.out.println("Switching to Location Page");
         // switch to page 3
         selectElement("com.microware.cdfi.training:id/Ivloc").click();
         selectElement("com.microware.cdfi.training:id/addAddress").click();
-        selectElement("com.microware.cdfi.training:id/et_address1").sendKeys("Test Address");
+        selectElement("com.microware.cdfi.training:id/et_address1").sendKeys(address);
         selectElement("com.microware.cdfi.training:id/et_pincode").sendKeys("222129");
         selectElement("com.microware.cdfi.training:id/btn_add").click();
 
         // clicking ok after submit
         selectElement("com.microware.cdfi.training:id/btn_ok").click();
 
-        System.out.println("Switching to Bank Page");
+//        System.out.println("Switching to Bank Page");
         // switch to page 4
         selectElement("com.microware.cdfi.training:id/IvBank").click();
         selectElement("com.microware.cdfi.training:id/addBank").click();
@@ -220,8 +276,8 @@ public class LokOS_Automation {
         selectElementXPath("Select Branch Name").click();
         selectElementXPath("BIJNOR").click();
 
-        scrollToId("com.microware.cdfi.training:id/et_Accountno").sendKeys("22345678901");
-        scrollToId("com.microware.cdfi.training:id/et_retype_Accountno").sendKeys("22345678901");
+        scrollToId("com.microware.cdfi.training:id/et_Accountno").sendKeys(accountNumber);
+        scrollToId("com.microware.cdfi.training:id/et_retype_Accountno").sendKeys(accountNumber);
 
         // account opening date
         scrollToId("com.microware.cdfi.training:id/et_opdate").click();
@@ -245,12 +301,19 @@ public class LokOS_Automation {
 
     }
 
-    public static void createMembers(){
-        selectElement("com.microware.cdfi.training:id/tv_count").click();
+
+    public static void createMembers(String shg_name, String name, String mobileNumber, String address, String accountNumber, String aadharNumber) {
+//        MobileElement buttonSelected = selectSHG(shg_name);
+//        if (buttonSelected == null) {
+//            System.out.println("SHG Not exist");
+//            return;
+//        }
+//        buttonSelected.click();
+
         selectElement("com.microware.cdfi.training:id/tbl_add").click();
 
         // fill member details
-        selectElement("com.microware.cdfi.training:id/et_name").sendKeys("Test Member");
+        selectElement("com.microware.cdfi.training:id/et_name").sendKeys(name);
 
         // selection the layout group and the get the radio child and select the No one
         MobileElement parentRadio = scrollToId("com.microware.cdfi.training:id/rgisDobavailable");
@@ -308,7 +371,7 @@ public class LokOS_Automation {
 
         // Add Phone Number Page
         selectElement("com.microware.cdfi.training:id/addphone").click();
-        selectElement("com.microware.cdfi.training:id/et_phoneno").sendKeys("9999999999");
+        selectElement("com.microware.cdfi.training:id/et_phoneno").sendKeys(mobileNumber);
         selectElement("com.microware.cdfi.training:id/spin_ownership").click();
         selectDropdownText("Self").click();
         selectElement("com.microware.cdfi.training:id/btn_save").click();
@@ -321,7 +384,7 @@ public class LokOS_Automation {
         selectElement("com.microware.cdfi.training:id/spin_addresstype").click();
         selectDropdownText("Primary").click();
 
-        scrollToId("com.microware.cdfi.training:id/et_address1").sendKeys("Test Address 1");
+        scrollToId("com.microware.cdfi.training:id/et_address1").sendKeys(address);
         scrollToId("com.microware.cdfi.training:id/et_pincode").sendKeys("222129");
 
         scrollToId("com.microware.cdfi.training:id/btn_add").click();
@@ -341,8 +404,8 @@ public class LokOS_Automation {
         selectElementXPath("Select Branch Name").click();
         selectElementXPath("BIJNOR").click();
 
-        scrollToId("com.microware.cdfi.training:id/et_Accountno").sendKeys("22345604901");
-        scrollToId("com.microware.cdfi.training:id/et_retype_Accountno").sendKeys("22345604901");
+        scrollToId("com.microware.cdfi.training:id/et_Accountno").sendKeys(accountNumber);
+        scrollToId("com.microware.cdfi.training:id/et_retype_Accountno").sendKeys(accountNumber);
 
         // account opening date
         scrollToId("com.microware.cdfi.training:id/et_opdate").click();
@@ -364,9 +427,9 @@ public class LokOS_Automation {
         selectElement("com.microware.cdfi.training:id/addKyc").click();
 
         selectElement("com.microware.cdfi.training:id/spin_kyctype").click();
-        selectDropdownText("Voter ID").click();
+        selectDropdownText("Aadhaar").click();
 
-        selectElement("com.microware.cdfi.training:id/et_kycno").sendKeys("WHY1234567");
+        selectElement("com.microware.cdfi.training:id/et_kycno").sendKeys(aadharNumber);
 
         scrollToId("com.microware.cdfi.training:id/IvFrntUpload").click();
         clickImage();
@@ -379,25 +442,5 @@ public class LokOS_Automation {
 
         driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
         selectElement("com.microware.cdfi.training:id/ivBack").click();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
-
-
-
-
-
-
 }
