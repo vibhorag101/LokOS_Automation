@@ -33,6 +33,7 @@ public class LokOS_Automation {
     }
 
     public static MobileElement selectSHG(String SHGName) {
+//        System.out.println("selectSHG: " + SHGName);
         String s = "new UiSelector().className(\"android.widget.LinearLayout\").childSelector("
                 + "new UiSelector().className(\"android.widget.TextView\").text(\"" + SHGName + "\"))";
         // scroll the container with the shg elements
@@ -76,8 +77,7 @@ public class LokOS_Automation {
         DataGenerator.main(new String[] {"Tho Chaliye Shuru Karte Hain!"});
         openLokOS();
         navigateToSHG();
-//        C:\Users\ayush\Desktop\LokOS_Automation\SHG_Data.csv
-        File file = new File("C:/Users/ayush/Desktop/LokOS_Automation/SHG_Data.csv");
+        File file = new File("SHG_Data.csv");
         try {
             FileReader reader = new FileReader(file);
             Scanner scanner = new Scanner(reader);
@@ -99,24 +99,11 @@ public class LokOS_Automation {
 //        createSHG();
     }
 
-//    public static int randomNumber(int lowerBound, int upperBound) {
-//        return (lowerBound + (int) (Math.random() * ((upperBound - lowerBound) + 1)));
-//    }
-//
-//    public static String AadhaarGenerator() {
-//        String digit1 = "2";
-//        String digit2_6 = String.valueOf(randomNumber(10000, 99999));
-//        String digit7_8 = "23";
-//        String digit9_11 = String.valueOf(randomNumber(100, 999));
-//        String num = digit1 + digit2_6 + digit7_8 + digit9_11;
-//        return (num + Aadhaar.generateVerhoeff(num));
-//    }
-
     public static void openLokOS() {
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("deviceName", "Ayush's M31");
-        capabilities.setCapability("udid", "RZ8N715SEBP");
+//        capabilities.setCapability("deviceName", "Redmi Note 10 Pro");
+//        capabilities.setCapability("udid", "189557ef");
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("platformVersion", "12");
         capabilities.setCapability("appPackage", "com.microware.cdfi.training");
@@ -152,13 +139,19 @@ public class LokOS_Automation {
     public static void navigateToSHG() {
         WebElement choose = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.microware.cdfi.training:id/tbl_shg")));
         choose.click();
-        System.out.println("SHG selected");
+//        System.out.println("SHG selected");
     }
 
     public static void createSHG(String name, String address, String accountNumber) throws IOException, InterruptedException {
         fillInfo(name, address, accountNumber);
         String member_FileNumber = name.split(" ")[1];
-        File file = new File("C:/Users/ayush/Desktop/LokOS_Automation/SHG_MemberData-" + member_FileNumber + ".csv");
+        File file = new File("SHG_MemberData-" + member_FileNumber + ".csv");
+        MobileElement buttonSelected = selectSHG(name);
+        if (buttonSelected == null) {
+            System.out.println("SHG Not exist");
+            return;
+        }
+        buttonSelected.click();
         try {
             FileReader reader = new FileReader(file);
             Scanner scanner = new Scanner(reader);
@@ -177,6 +170,8 @@ public class LokOS_Automation {
             e.printStackTrace();
             System.out.println("Error in reading the CSV File!");
         }
+        driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+        selectElement("com.microware.cdfi.training:id/icBack").click();
 
     }
 
@@ -197,7 +192,7 @@ public class LokOS_Automation {
         WebElement create = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.microware.cdfi.training:id/IvAdd")));
         create.click();
 
-        System.out.println("Filling Info");
+//        System.out.println("Filling Info");
         // SHG Name
         MobileElement SHGName = scrollToId("com.microware.cdfi.training:id/et_groupname");
         SHGName.sendKeys(name);
@@ -255,7 +250,7 @@ public class LokOS_Automation {
         selectElement("com.microware.cdfi.training:id/btn_ok").click();
 
 
-        System.out.println("Switching to Location Page");
+//        System.out.println("Switching to Location Page");
         // switch to page 3
         selectElement("com.microware.cdfi.training:id/Ivloc").click();
         selectElement("com.microware.cdfi.training:id/addAddress").click();
@@ -266,7 +261,7 @@ public class LokOS_Automation {
         // clicking ok after submit
         selectElement("com.microware.cdfi.training:id/btn_ok").click();
 
-        System.out.println("Switching to Bank Page");
+//        System.out.println("Switching to Bank Page");
         // switch to page 4
         selectElement("com.microware.cdfi.training:id/IvBank").click();
         selectElement("com.microware.cdfi.training:id/addBank").click();
@@ -308,12 +303,12 @@ public class LokOS_Automation {
 
 
     public static void createMembers(String shg_name, String name, String mobileNumber, String address, String accountNumber, String aadharNumber) {
-        MobileElement buttonSelected = selectSHG("shg_name");
-        if (buttonSelected == null) {
-            System.out.println("SHG Not exist");
-            return;
-        }
-        buttonSelected.click();
+//        MobileElement buttonSelected = selectSHG(shg_name);
+//        if (buttonSelected == null) {
+//            System.out.println("SHG Not exist");
+//            return;
+//        }
+//        buttonSelected.click();
 
         selectElement("com.microware.cdfi.training:id/tbl_add").click();
 
@@ -432,7 +427,7 @@ public class LokOS_Automation {
         selectElement("com.microware.cdfi.training:id/addKyc").click();
 
         selectElement("com.microware.cdfi.training:id/spin_kyctype").click();
-        selectDropdownText("Voter ID").click();
+        selectDropdownText("Aadhaar").click();
 
         selectElement("com.microware.cdfi.training:id/et_kycno").sendKeys(aadharNumber);
 
