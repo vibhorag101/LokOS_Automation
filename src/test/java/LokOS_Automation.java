@@ -7,13 +7,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-import java.io.*;
-import java.util.*;
 
 public class LokOS_Automation {
     static AndroidDriver<MobileElement> driver;
@@ -73,10 +75,23 @@ public class LokOS_Automation {
         return (MobileElement) chosenElement;
     }
 
+    static Scanner scan = new Scanner(System.in);
+    static String shg_number = "";
+    static String shg_addressNumber = "";
+    static String shg_accountNumber = "";
+    static String mobileNumber = "";
+    static String addressNumber = "";
+    static String member_accountNumber = "";
+
+
     public static void main(String[] args) throws InterruptedException, IOException {
         DataGenerator.main(new String[] {"Tho Chaliye Shuru Karte Hain!"});
         openLokOS();
         navigateToSHG();
+
+
+
+
         File file = new File("SHG_Data.csv");
         try {
             FileReader reader = new FileReader(file);
@@ -88,6 +103,9 @@ public class LokOS_Automation {
                 String line = scanner.nextLine();
                 String[] fields = line.split(",");
                 createSHG(fields[0], fields[1], fields[2]);
+                shg_number = fields[0].substring(4);
+                shg_addressNumber = fields[1].substring(11);
+                shg_accountNumber = fields[2];
             }
             scanner.close();
             reader.close();
@@ -96,8 +114,45 @@ public class LokOS_Automation {
             e.printStackTrace();
             System.out.println("Error in reading the CSV File!");
         }
-//        createSHG();
+
+        System.out.println("SHG Creation result?");
+        System.out.println("1. Positive");
+        System.out.println("2. Negative");
+        System.out.println("Type: 'P/p' --> Positive || 'N/n' --> Negative: ");
+        String input = scan.nextLine();
+        if(input.equals("P") || input.equals("p")) updateCounter();
+        else System.out.println("DataCounter Unchanged!");
     }
+
+    public static void updateCounter(){
+        String fileName = "DataCounter.csv";
+        try {
+            FileWriter writer = new FileWriter(fileName);
+            /* Column Headers */
+            writer.append("shg_number,");
+            writer.append("shg_address,");
+            writer.append("shg_accountNumber,");
+            writer.append("mobileNumber,");
+            writer.append("address,");
+            writer.append("accountNumber\n");
+
+            writer.append(shg_number + ",");
+            writer.append(shg_addressNumber + ",");
+            writer.append(shg_accountNumber + ",");
+            writer.append(mobileNumber + ",");
+            writer.append(addressNumber + ",");
+            writer.append(member_accountNumber + "\n");
+
+            writer.flush();
+            writer.close();
+        }
+        catch (IOException e){
+            System.err.println("Error writing to CSV file: " + e.getMessage());
+        }
+        System.out.println("Data Counter Updated!");
+    }
+
+
 
     public static void openLokOS() {
 
@@ -162,6 +217,9 @@ public class LokOS_Automation {
                 String line = scanner.nextLine();
                 String[] fields = line.split(",");
                 createMembers(name, fields[0], fields[1], fields[2], fields[3], fields[4]);
+                mobileNumber = fields[1];
+                addressNumber = fields[2];
+                member_accountNumber = fields[3];
             }
             scanner.close();
             reader.close();
@@ -170,7 +228,7 @@ public class LokOS_Automation {
             e.printStackTrace();
             System.out.println("Error in reading the CSV File!");
         }
-        driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+//        driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
         selectElement("com.microware.cdfi.training:id/icBack").click();
 
     }
@@ -179,10 +237,11 @@ public class LokOS_Automation {
         //Camera Image Capture Working
         // wait for camera to load
         selectElement("com.android.camera:id/top_tip_layout");
-
+//        selectElement("com.sec.android.app.camera:id/camera_preview");
         // press camera button
         driver.pressKey(new KeyEvent().withKey(AndroidKey.CAMERA));
         selectElement("com.android.camera:id/done_button").click();
+//        selectElement("com.sec.android.app.camera:id/okay").click();
         selectElement("com.microware.cdfi.training:id/crop_image_menu_crop").click();
     }
 
@@ -242,7 +301,7 @@ public class LokOS_Automation {
         // push a file to the device using appium
         String filePath = "src/test/java/SHGCopy.pdf";
         driver.pushFile("/storage/emulated/0/Download/SHGCopy.pdf", new File(filePath));
-        driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         selectElementXPath("SHGCopy").click();
 
         // click on submit
@@ -296,7 +355,7 @@ public class LokOS_Automation {
 //        selectElement("com.microware.cdfi.training:id/IvKyc").click();
 
         // go to main page
-        driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         selectElement("com.microware.cdfi.training:id/ivBack").click();
 
     }
@@ -408,7 +467,9 @@ public class LokOS_Automation {
         scrollToId("com.microware.cdfi.training:id/et_retype_Accountno").sendKeys(accountNumber);
 
         // account opening date
+
         scrollToId("com.microware.cdfi.training:id/et_opdate").click();
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         selectElement("android:id/button1").click();
 
         //Camera Image Capture Working
@@ -416,7 +477,6 @@ public class LokOS_Automation {
         selectElement("com.microware.cdfi.training:id/ImgFrntpage").click();
 
         // wait for camera to load
-        selectElement("com.android.camera:id/top_tip_layout");
         clickImage();
 
         scrollToId("com.microware.cdfi.training:id/btn_add").click();
@@ -440,7 +500,7 @@ public class LokOS_Automation {
         selectElement("com.microware.cdfi.training:id/btn_kyc").click();
         selectElement("com.microware.cdfi.training:id/btn_ok").click();
 
-        driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         selectElement("com.microware.cdfi.training:id/ivBack").click();
     }
 }

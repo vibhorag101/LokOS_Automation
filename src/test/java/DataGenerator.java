@@ -1,15 +1,20 @@
+import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Scanner;
 public class DataGenerator {
     /* SHG Data Block */
-    static long shg_accountNumber = 20000000000L;
-    static String shg_address = "shg_address";
+    static long shg_number;
+    static long shg_accountNumber;
+    static long shg_address;
 
     /* SHG Member's Data Block */
-    static long mobileNumber = 9999900000L;
-    static String address = "address";
-    static long accountNumber = 10000000000L;
+    static long mobileNumber;
+    static long address;
+    static long accountNumber;
 //    static int voterIDSuffix = 1000000;
     static HashSet<String> aadhaarSet = new HashSet<String>();
     private static Scanner scan = new Scanner(System.in);
@@ -26,8 +31,48 @@ public class DataGenerator {
         System.out.print("\nNo. Of. Members in Each SHG: ");
         int num_member = scan.nextInt();
 
+        /* Initializing Data Counter */
+        initializeCounter();
+
         /* Generating SHG Data */
         generateSHGData(num_shg, num_member);
+    }
+
+    public static void initializeCounter(){
+        File file = new File("DataCounter.csv");
+        try {
+            FileReader reader = new FileReader(file);
+            Scanner scanner = new Scanner(reader);
+
+            if (scanner.hasNextLine())scanner.nextLine();
+            String line = scanner.nextLine();
+            String[] fields = line.split(",");
+
+//            System.out.println(fields[0]);
+//            System.out.println(fields[1]);
+//            System.out.println(fields[2]);
+//            System.out.println(fields[3]);
+//            System.out.println(fields[4]);
+//            System.out.println(fields[5]);
+            shg_number = Long.parseLong(fields[0]);
+            shg_address = Long.parseLong(fields[1]);
+            shg_accountNumber = Long.parseLong(fields[2]);
+            mobileNumber = Long.parseLong(fields[3]);
+            address = Long.parseLong(fields[4]);
+            accountNumber = Long.parseLong(fields[5]);
+
+//            while (scanner.hasNextLine()) {
+//                String line = scanner.nextLine();
+//                String[] fields = line.split(",");
+////                createSHG(fields[0], fields[1], fields[2]);
+//            }
+            scanner.close();
+            reader.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error in reading the CSV File!");
+        }
     }
 
     public static int randomNumber(int lowerBound, int upperBound) {
@@ -48,6 +93,9 @@ public class DataGenerator {
     private static void generateSHGData(int num_shg, int num_member){
         String csvFilePath = "SHG_Data.csv";
 
+//        shg_accountNumber = ;
+//        shg_address = ;
+
         try{
             FileWriter writer = new FileWriter(csvFilePath);
             /* Column Headers */
@@ -56,11 +104,11 @@ public class DataGenerator {
             writer.append("accountNumber\n");
 
             for(int i = 1; i <= num_shg; i++){
-                writer.append("SHG " + i + ",");
-                writer.append(shg_address + i + ",");
+                writer.append("SHG " + (shg_number+i) + ",");
+                writer.append("shg_address" + (shg_address+i) + ",");
                 writer.append(shg_accountNumber + i + "\n");
                 /* Generating Member Data */
-                generateMemberData(i, num_member);
+                generateMemberData((shg_number+i), num_member);
             }
 
             writer.flush();
@@ -72,7 +120,7 @@ public class DataGenerator {
             System.err.println("Error writing to CSV file: " + e.getMessage());
         }
     }
-    private static void generateMemberData(int shg_number, int num_member){
+    private static void generateMemberData(long shg_number, int num_member){
         String csvFilePath = "SHG_MemberData-" + shg_number + ".csv";
         Random random = new Random();
 
@@ -95,7 +143,7 @@ public class DataGenerator {
                 mobileNumber++;
                 writer.append(name + ",");
                 writer.append(mobileNumber + ",");
-                writer.append(address + i + ",");
+                writer.append("address" + (address+ i) + ",");
                 writer.append(accountNumber + ",");
 //                writer.append("WHY" + (voterIDSuffix) + "\n");
                 writer.append(AadhaarGenerator() + "\n");
