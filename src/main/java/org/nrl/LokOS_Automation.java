@@ -1,3 +1,5 @@
+package org.nrl;
+
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.nativekey.AndroidKey;
@@ -101,7 +103,7 @@ public class LokOS_Automation {
 
 
 
-        File file = new File("src/test/resources/SHG-Data/SHG_Data.csv");
+        File file = new File("src/main/resources/SHG-Data/SHG_Data.csv");
         try {
             FileReader reader = new FileReader(file);
             Scanner scanner = new Scanner(reader);
@@ -135,7 +137,7 @@ public class LokOS_Automation {
     }
 
     public static void updateCounter(){
-        String fileName = "src/test/resources/DataCounter.csv";
+        String fileName = "src/main/resources/DataCounter.csv";
         try {
             FileWriter writer = new FileWriter(fileName);
             /* Column Headers */
@@ -210,7 +212,7 @@ public class LokOS_Automation {
     public static void createSHG(String name, String address, String accountNumber) throws IOException {
         fillInfo(name, address, accountNumber);
         String member_FileNumber = name.split(" ")[1];
-        File file = new File("src/test/resources/SHG-Data/SHG_MemberData-" + member_FileNumber + ".csv");
+        File file = new File("src/main/resources/SHG-Data/SHG_MemberData-" + member_FileNumber + ".csv");
         MobileElement buttonSelected = selectSHG(name);
         if (buttonSelected == null) {
             System.out.println("SHG Not exist");
@@ -309,7 +311,7 @@ public class LokOS_Automation {
         selectElement("com.microware.cdfi.training:id/tvUploadData").click();
 
         // push a file to the device using appium
-        String filePath = "src/test/resources/SHGCopy.pdf";
+        String filePath = "src/main/resources/SHGCopy.pdf";
         driver.pushFile("/storage/emulated/0/Download/SHGCopy.pdf", new File(filePath));
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         selectElementXPath("SHGCopy").click();

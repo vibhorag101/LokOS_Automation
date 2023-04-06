@@ -1,3 +1,5 @@
+package org.nrl;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -39,7 +41,7 @@ public class DataGenerator {
     }
 
     public static void initializeCounter(){
-        File file = new File("src/test/resources/DataCounter.csv");
+        File file = new File("src/main/resources/DataCounter.csv");
         try {
             FileReader reader = new FileReader(file);
             Scanner scanner = new Scanner(reader);
@@ -91,7 +93,7 @@ public class DataGenerator {
     }
 
     private static void generateSHGData(int num_shg, int num_member){
-        String csvFilePath = "src/test/resources/SHG-Data/SHG_Data.csv";
+        String csvFilePath = "src/main/resources/SHG-Data/SHG_Data.csv";
 
 //        shg_accountNumber = ;
 //        shg_address = ;
@@ -121,7 +123,7 @@ public class DataGenerator {
         }
     }
     private static void generateMemberData(long shg_number, int num_member){
-        String csvFilePath = "src/test/resources/SHG-Data/SHG_MemberData-" + shg_number + ".csv";
+        String csvFilePath = "src/main/resources/SHG-Data/SHG_MemberData-" + shg_number + ".csv";
         Random random = new Random();
 
         try{

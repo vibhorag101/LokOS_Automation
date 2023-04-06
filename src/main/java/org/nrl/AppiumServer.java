@@ -1,7 +1,9 @@
-import org.openqa.selenium.remote.DesiredCapabilities;
+package org.nrl;
+
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.IOException;
 import java.net.ServerSocket;

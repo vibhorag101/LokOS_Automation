@@ -1,3 +1,5 @@
+package org.nrl;
+
 /**
  * @see <a href="http://en.wikipedia.org/wiki/Verhoeff_algorithm">More Info</a>
  * @see <a href="http://en.wikipedia.org/wiki/Dihedral_group">Dihedral Group</a>
