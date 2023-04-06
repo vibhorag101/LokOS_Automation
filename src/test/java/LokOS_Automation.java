@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class LokOS_Automation {
     static AndroidDriver<MobileElement> driver;
     static WebDriverWait wait;
-//    static Aadhaar aadhaar;
+    static AppiumServer appiumServer;
 
     public static MobileElement scrollToText(String text) {
         return driver.findElementByAndroidUIAutomator("new UiScrollable("
@@ -35,9 +35,6 @@ public class LokOS_Automation {
     }
 
     public static MobileElement selectSHG(String SHGName) {
-//        System.out.println("selectSHG: " + SHGName);
-        String s = "new UiSelector().className(\"android.widget.LinearLayout\").childSelector("
-                + "new UiSelector().className(\"android.widget.TextView\").text(\"" + SHGName + "\"))";
         // scroll the container with the shg elements
         driver.findElementByAndroidUIAutomator(
                 "new UiScrollable(" + "new UiSelector().resourceIdMatches(\"com.microware.cdfi.training:id/rvShgList\")).scrollIntoView("
@@ -83,16 +80,28 @@ public class LokOS_Automation {
     static String addressNumber = "";
     static String member_accountNumber = "";
 
-
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void startAppiumServer(){
+        appiumServer = new AppiumServer();
+        int port = 4723;
+        if(!appiumServer.checkIfServerIsRunnning(port)) {
+            appiumServer.startServer();
+        } else {
+            System.out.println("Appium Server already running on Port - " + port);
+        }
+    }
+    public static void stopAppiumServer(){
+        appiumServer.stopServer();
+    }
+    public static void main(String[] args) throws InterruptedException{
         DataGenerator.main(new String[] {"Tho Chaliye Shuru Karte Hain!"});
+        startAppiumServer();
         openLokOS();
         navigateToSHG();
 
 
 
 
-        File file = new File("SHG_Data.csv");
+        File file = new File("src/test/resources/SHG-Data/SHG_Data.csv");
         try {
             FileReader reader = new FileReader(file);
             Scanner scanner = new Scanner(reader);
@@ -122,10 +131,11 @@ public class LokOS_Automation {
         String input = scan.nextLine();
         if(input.equals("P") || input.equals("p")) updateCounter();
         else System.out.println("DataCounter Unchanged!");
+        stopAppiumServer();
     }
 
     public static void updateCounter(){
-        String fileName = "DataCounter.csv";
+        String fileName = "src/test/resources/DataCounter.csv";
         try {
             FileWriter writer = new FileWriter(fileName);
             /* Column Headers */
@@ -197,10 +207,10 @@ public class LokOS_Automation {
 //        System.out.println("SHG selected");
     }
 
-    public static void createSHG(String name, String address, String accountNumber) throws IOException, InterruptedException {
+    public static void createSHG(String name, String address, String accountNumber) throws IOException {
         fillInfo(name, address, accountNumber);
         String member_FileNumber = name.split(" ")[1];
-        File file = new File("SHG_MemberData-" + member_FileNumber + ".csv");
+        File file = new File("src/test/resources/SHG-Data/SHG_MemberData-" + member_FileNumber + ".csv");
         MobileElement buttonSelected = selectSHG(name);
         if (buttonSelected == null) {
             System.out.println("SHG Not exist");
@@ -246,7 +256,7 @@ public class LokOS_Automation {
     }
 
 
-    public static void fillInfo(String name, String address, String accountNumber) throws IOException, InterruptedException {
+    public static void fillInfo(String name, String address, String accountNumber) throws IOException{
         // press the create SHG Button
         WebElement create = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.microware.cdfi.training:id/IvAdd")));
         create.click();
@@ -299,7 +309,7 @@ public class LokOS_Automation {
         selectElement("com.microware.cdfi.training:id/tvUploadData").click();
 
         // push a file to the device using appium
-        String filePath = "src/test/java/SHGCopy.pdf";
+        String filePath = "src/test/resources/SHGCopy.pdf";
         driver.pushFile("/storage/emulated/0/Download/SHGCopy.pdf", new File(filePath));
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         selectElementXPath("SHGCopy").click();
