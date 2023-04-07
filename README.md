@@ -23,8 +23,8 @@ npm install -g appium
 
 ### Installing ADB on System
 - Download this [`Zip File`](https://dl.google.com/android/repository/platform-tools-latest-windows.zip)
-- Unzip this file in [`C:\Program Files\Platform Tools`]
-- Now add this folder to Path in Environmental Variables.
+- Unzip this file in `C:\Program Files\Platform Tools`
+- Now add this folder to `Path` in `Environmental Variables` (for windows).
 - With this ADB is installed on the system and accesible via the Terminal.
 
 ### Turning on USB Debugging in Android Device
@@ -42,7 +42,7 @@ npm install -g appium
 - Connect the device to PC via USB or over [`WiFi`](https://help.famoco.com/developers/dev-env/adb-over-wifi/)
 - Now just open `LokOS_Automation` file and run it.
 ![image](https://user-images.githubusercontent.com/76804249/230651928-707c1787-e0b4-43e0-9cc0-bf4584c819f3.png)
-- Now just enter the number of SHG's to be created along with member in each SHG and let the magic happen.
+- Now just enter the number of SHG's to be created along with number of members in each SHG and let the magic happen.
 
 ### ❌❌ Note ❌❌
 ```
