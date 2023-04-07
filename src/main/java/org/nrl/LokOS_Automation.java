@@ -248,12 +248,21 @@ public class LokOS_Automation {
     public static void clickImage() {
         //Camera Image Capture Working
         // wait for camera to load
+
+        // For Xiaomi
         selectElement("com.android.camera:id/top_tip_layout");
+        // For Samsung (comment the Xiaomi Code and uncomment the Samsung Code)
 //        selectElement("com.sec.android.app.camera:id/camera_preview");
+
         // press camera button
+
         driver.pressKey(new KeyEvent().withKey(AndroidKey.CAMERA));
+        // -----------------------------------------------------------
+        // for Xiaomi
         selectElement("com.android.camera:id/done_button").click();
-//        selectElement("com.sec.android.app.camera:id/okay").click();
+        // For Samsung (comment the Xiaomi Code and uncomment the Samsung Code)
+        // selectElement("com.sec.android.app.camera:id/okay").click();
+//      --------------------------------------------------------
         selectElement("com.microware.cdfi.training:id/crop_image_menu_crop").click();
     }
 
