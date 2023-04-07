@@ -47,8 +47,10 @@ npm install -g appium
 ### ❌❌ Note ❌❌
 ```
 The above script relies on UI elements for simulating the input.  
-It works perfectly fine on Xiaomi Devices and Samsung Devices(refer to Line 254 in LokOS_Automation File). 
-However it can be tweaked to work with any OEM's device with very minor changes in 2-3 Lines. You can contact me in case 
-you want to get it tweaked for your OEM, or you can use Appium Inspector to identify the UI component yourself.
+It works perfectly fine on Xiaomi Devices and Samsung Devices(refer to Line 254
+in LokOS_Automation File). 
+However it can be tweaked to work with any OEM's device with very minor
+changes in 2-3 Lines. You can contact me in case you want to get it tweaked
+for your OEM, or you can use Appium Inspector to identify the UI component yourself.
 ```
 
