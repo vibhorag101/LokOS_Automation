@@ -19,6 +19,7 @@ npm install -g appium
 - Install [`Intellij Idea`](https://www.jetbrains.com/idea/download/) , if not already installed.
 - Now open the cloned repository with Intellij Idea.
 - Open pom.xml file and resolve all dependencies with following button
+
 ![image](https://user-images.githubusercontent.com/76804249/230651164-6556cf7c-73bb-4257-8d47-669f1abb6dd4.png)
 
 ### Installing ADB on System
@@ -41,6 +42,7 @@ npm install -g appium
 ### Running the Script
 - Connect the device to PC via USB or over [`WiFi`](https://help.famoco.com/developers/dev-env/adb-over-wifi/)
 - Now just open `LokOS_Automation` file and run it.
+
 ![image](https://user-images.githubusercontent.com/76804249/230651928-707c1787-e0b4-43e0-9cc0-bf4584c819f3.png)
 - Now just enter the number of SHG's to be created along with number of members in each SHG and let the magic happen.
 
