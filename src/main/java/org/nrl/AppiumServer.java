@@ -48,4 +48,10 @@ public class AppiumServer {
         }
         return isServerRunning;
     }
+
+    public static void main(String[] args) {
+        AppiumServer appiumServer = new AppiumServer();
+        appiumServer.startServer();
+        appiumServer.stopServer();
+    }
 }
