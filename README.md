@@ -1,6 +1,7 @@
 ## LokOS Automation Script
 - This is an automation script for creating SHG Data for Lok-OS Training Android Application. 
 - This is made using Appium Testing Framework.
+- The request data for the Application is as follows ['JSON Data'](https://drive.google.com/drive/u/1/folders/11zHyU0mvVCwXFUy5oZBQHUZ4Yo3L_ygj)
 
 ## Technologies Used
 - Android Framework
